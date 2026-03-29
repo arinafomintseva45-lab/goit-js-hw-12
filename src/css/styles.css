@@ -16,3 +16,62 @@
 @import url('./badges.css');
 @import url('./back-link.css');
 @import url('./footer.css');
+ 
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.form {
+  margin-bottom: 20px;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+
+.gallery li {
+  width: calc((100% - 30px) / 4);
+}
+
+.gallery img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.load-more {
+  display: none;
+  margin: 20px auto;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.load-more.visible {
+  display: block;
+}
+
+.loader {
+  display: none;
+  margin: 20px auto;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ccc;
+  border-top-color: black;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loader.visible {
+  display: block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

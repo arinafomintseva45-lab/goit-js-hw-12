@@ -1,7 +1,7 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
-import { getImagesByQuery } from "./js/pixabay-api";
+import { getImagesByQuery } from "./js/pixabay-api.js";
 import {
   createGallery,
   clearGallery,
@@ -9,7 +9,7 @@ import {
   hideLoader,
   showLoadMoreButton,
   hideLoadMoreButton,
-} from "./js/render-functions";
+} from "./js/render-functions.js";
 
 let page = 1;
 let query = "";
@@ -35,7 +35,9 @@ form.addEventListener("submit", async e => {
     totalHits = data.totalHits;
 
     if (data.hits.length === 0) {
-      iziToast.error({ message: "No images found" });
+      iziToast.error({
+        message: "No images found",
+      });
       return;
     }
 
@@ -45,10 +47,17 @@ form.addEventListener("submit", async e => {
 
     if (totalPages > 1) {
       showLoadMoreButton();
+    } else {
+      hideLoadMoreButton();
+      iziToast.info({
+        message: "We're sorry, but you've reached the end of search results.",
+      });
     }
 
   } catch (error) {
-    iziToast.error({ message: "Error fetching images" });
+    iziToast.error({
+      message: "Error fetching images",
+    });
   } finally {
     hideLoader();
   }
@@ -56,6 +65,8 @@ form.addEventListener("submit", async e => {
 
 loadMoreBtn.addEventListener("click", async () => {
   page++;
+
+  hideLoadMoreButton();
   showLoader();
 
   try {
@@ -65,7 +76,9 @@ loadMoreBtn.addEventListener("click", async () => {
 
     const totalPages = Math.ceil(totalHits / 15);
 
-    if (page >= totalPages) {
+    if (page < totalPages) {
+      showLoadMoreButton();
+    } else {
       hideLoadMoreButton();
       iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
@@ -73,15 +86,20 @@ loadMoreBtn.addEventListener("click", async () => {
     }
 
     const card = document.querySelector(".gallery a");
-    const cardHeight = card.getBoundingClientRect().height;
 
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: "smooth",
-    });
+    if (card) {
+      const cardHeight = card.getBoundingClientRect().height;
+
+      window.scrollBy({
+        top: cardHeight * 2,
+        behavior: "smooth",
+      });
+    }
 
   } catch (error) {
-    iziToast.error({ message: "Error loading more images" });
+    iziToast.error({
+      message: "Error loading more images",
+    });
   } finally {
     hideLoader();
   }
